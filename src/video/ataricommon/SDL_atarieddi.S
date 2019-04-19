@@ -33,10 +33,25 @@
 /*--- Vector installer ---*/
 
 _Atari_get_EdDI_version:
-	movel	sp@(4),a0	/* Value of EdDI cookie */
+	movel	sp@(4),eddi_cookie
+	moveml	d2/a2,sp@-
+
+	/* Supexec() to avoid crash on FreeMiNT with MP */
+	pea	get_EdDI_version(pc)
+	movew	#38,sp@-
+	trap	#14
+	addql	#6,sp
+
+	moveml	sp@+,d2/a2
+	rts
+
+get_EdDI_version:
+	movel	eddi_cookie,a0
 
 	/* Call EdDI function #0 */
 	clrw	d0
-	jsr	(a0)
+	jmp	(a0)
 
-	rts
+	.bss
+eddi_cookie:
+	.ds.l	1

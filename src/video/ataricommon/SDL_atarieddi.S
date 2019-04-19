@@ -33,8 +33,15 @@
 /*--- Vector installer ---*/
 
 _Atari_get_EdDI_version:
+#if defined(__mcoldfire__)
+	movel	sp@(4),a0
+	movel	a0,eddi_cookie
+	lea	sp@(-8),sp
+	moveml	d2/a2,sp@
+#else
 	movel	sp@(4),eddi_cookie
 	moveml	d2/a2,sp@-
+#endif
 
 	/* Supexec() to avoid crash on FreeMiNT with MP */
 	pea	get_EdDI_version(pc)
@@ -42,7 +49,12 @@ _Atari_get_EdDI_version:
 	trap	#14
 	addql	#6,sp
 
+#if defined(__mcoldfire__)
+	moveml	sp@,d2/a2
+	lea	sp@(8),sp
+#else
 	moveml	sp@+,d2/a2
+#endif
 	rts
 
 get_EdDI_version:

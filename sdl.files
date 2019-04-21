@@ -175,6 +175,8 @@ src/video/ataricommon/SDL_atarikeys.h
 src/video/ataricommon/SDL_atarimxalloc.c
 src/video/ataricommon/SDL_atarimxalloc_c.h
 src/video/ataricommon/SDL_atarisuper.h
+src/video/ataricommon/SDL_atarixbra.c
+src/video/ataricommon/SDL_atarixbra_c.h
 src/video/ataricommon/SDL_biosevents.c
 src/video/ataricommon/SDL_biosevents_c.h
 src/video/ataricommon/SDL_gemdosevents.c

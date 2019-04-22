@@ -140,8 +140,11 @@ void SDL_Atari_InitInternalKeymap(_THIS)
 		keymap[i] = SDLK_UNKNOWN;
 
 	/* Functions keys */
-	for ( i = 0; i<10; i++ )
+	for ( i = 0; i<10; i++ ) {
 		keymap[SCANCODE_F1 + i] = SDLK_F1+i;
+		/* Shift state is handled separately */
+		keymap[SCANCODE_SHIFT_F1 + i] = SDLK_F1+i;
+	}
 
 	/* Cursor keypad */
 	keymap[SCANCODE_HELP] = SDLK_HELP;

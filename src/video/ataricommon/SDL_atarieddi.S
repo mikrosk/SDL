@@ -65,5 +65,7 @@ get_EdDI_version:
 	jmp	(a0)
 
 	.bss
+
+	.even
 eddi_cookie:
 	.ds.l	1

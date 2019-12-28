@@ -232,7 +232,7 @@ SDL_keysym *SDL_Atari_TranslateKey(int scancode, SDL_keysym *keysym,
 	keysym->unicode = 0;
 
 	if (keysym->sym == SDLK_UNKNOWN) {
-		keysym->sym = asciicode = keytab_normal[scancode];		
+		keysym->sym = asciicode = keytab_normal[scancode];
 	}
 
 	if (SDL_TranslateUNICODE && pressed) {

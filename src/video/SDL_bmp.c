@@ -143,6 +143,11 @@ SDL_Surface * SDL_LoadBMP_RW (SDL_RWops *src, int freesrc)
 	(void) biYPelsPerMeter;
 	(void) biClrImportant;
 
+	if (biWidth <= 0 || biHeight == 0) {
+		SDL_SetError("BMP file with bad dimensions (%dx%d)", biWidth, biHeight);
+		was_error = SDL_TRUE;
+		goto done;
+	}
 	if (biHeight < 0) {
 		topDown = SDL_TRUE;
 		biHeight = -biHeight;
@@ -163,6 +168,7 @@ SDL_Surface * SDL_LoadBMP_RW (SDL_RWops *src, int freesrc)
 			ExpandBMP = biBitCount;
 			biBitCount = 8;
 			break;
+		case 0:
 		case 2:
 		case 3:
 		case 5:
@@ -222,13 +228,6 @@ SDL_Surface * SDL_LoadBMP_RW (SDL_RWops *src, int freesrc)
 					break;
 			}
 			break;
-		case 2:
-		case 5:
-		case 6:
-		case 7:
-			SDL_SetError("%d-bpp BMP images are not supported", biBitCount);
-			was_error = SDL_TRUE;
-			goto done;
 		default:
 			SDL_SetError("Compressed BMP files not supported");
 			was_error = SDL_TRUE;
@@ -315,6 +314,12 @@ SDL_Surface * SDL_LoadBMP_RW (SDL_RWops *src, int freesrc)
 				}
 				*(bits+i) = (pixel>>shift);
 				pixel <<= ExpandBMP;
+				if ( bits[i] >= biClrUsed ) {
+					SDL_SetError(
+						"A BMP image contains a pixel with a color out of the palette");
+					was_error = SDL_TRUE;
+					goto done;
+				}
 			} }
 			break;
 
@@ -324,6 +329,16 @@ SDL_Surface * SDL_LoadBMP_RW (SDL_RWops *src, int freesrc)
 				SDL_Error(SDL_EFREAD);
 				was_error = SDL_TRUE;
 				goto done;
+			}
+			if ( 8 == biBitCount && palette && biClrUsed < (1 << biBitCount ) ) {
+				for ( i=0; i<surface->w; ++i ) {
+					if ( bits[i] >= biClrUsed ) {
+						SDL_SetError(
+							"A BMP image contains a pixel with a color out of the palette");
+						was_error = SDL_TRUE;
+						goto done;
+					}
+				}
 			}
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 			/* Byte-swap the pixels if needed. Note that the 24bpp

@@ -27,7 +27,7 @@
  */
 
 #ifndef _SDL_ATARIKEYS_H_
-#define _SDL_ATARIKEYS_H_ 
+#define _SDL_ATARIKEYS_H_
 
 /* --- Keyboard scancodes --- */
 /* taken from svgalib/vgakeyboard.h */
